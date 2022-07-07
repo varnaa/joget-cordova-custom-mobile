@@ -1,0 +1,180 @@
+iframe#main {
+    display: none;
+    height: 100%;
+    width: 100%;
+    border: none; 
+    position: absolute; 
+    top: 0px; 
+    left: 0; 
+    right: 0; 
+    bottom: 0;                
+    z-index: 2000;
+}
+iframe#main.ios {
+    top: 0px;
+}
+body.ios {
+    margin-top: 0px;
+}
+#header, #aboutDialog .ui-header{
+    background: #607D8B;
+    color: white;
+}
+#header {
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+}
+div#header.ios {
+    position: absolute;
+    z-index: 100;
+}
+#homeButton, #aboutButton {
+    background: #607D8B !important;
+    box-shadow: #888 0px 1px 2px;
+}
+#homeControl {
+    position: fixed;
+    bottom: 20px;
+    left: -50px;
+    background: #607D8B;
+    color: white;
+    padding: 20px;
+    box-shadow: #666 1px 1px 2px 1px;
+    border-radius: 40px;
+    z-index: 100000050;
+    cursor: pointer;
+    width: auto;
+    text-align: center;
+    box-sizing: content-box;
+    opacity: 0.8;
+    transition: 1s;
+}
+#homeControl a {
+    font-size: 20px;
+}
+#homeControl.active {
+    left: 10px;
+    transition: 1s;
+}
+.ui-loader-default {
+    background: none;
+    filter: Alpha(Opacity=80);
+    opacity: .8;
+    width: 46px;
+    height: 46px;
+    margin-left: -18px;
+    margin-top: -36px;
+}
+.ui-loader .ui-icon {
+    background-color: transparent;
+    display: block;
+    margin: 0;
+    width: 44px;
+    height: 44px;
+    padding: 1px;
+    -webkit-border-radius: 36px;
+    border-radius: 36px;
+}
+.ui-loader h1 {
+    display: none;
+}
+.ui-icon-loading, .ui-loader .ui-icon-loading {
+    background-color: transparent;
+    background-size: 46px 46px;
+}
+.ui-listview > .ui-li-divider {
+    background: #bbb;
+}
+.ui-listview > .ui-li-static,
+.ui-listview > .ui-li-divider,
+.ui-listview > li > a.ui-btn {
+    border-width: 1px 0 0 0;
+    border-style: solid;
+}
+.ui-page-theme-a label.ui-btn {
+    border: none;
+    background: none;
+}
+.ui-dialog {
+    background: none;
+    opacity: 1;
+    z-index: 10;
+}
+#content.ui-content {
+    padding: 0px;
+    max-width: 640px;
+    margin: auto;
+}
+
+#userview {
+    background: white;
+}
+#container {
+    margin: 0px;
+}
+#welcome {
+    opacityx: 0.8;
+    margin: 0px 10px;
+    box-shadow: none;
+}
+#splash {
+    text-align: center;
+    margin: 20px auto;
+}
+#splash h4 {
+    font-size: 14px;
+}
+#about {
+    width: 300px;
+    text-align: left;
+}
+#version {
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+#about #back {
+    text-align: center;
+}
+#rememberPassword {
+    visibility: hidden;
+}
+.required {
+    color:red;
+}
+.profile_container {
+    border-bottom: none;
+    margin-bottom: 15px;
+}
+select#profile {
+    width: 100%;
+    padding: 10px;
+    background: #f9f9f9;
+    border: solid 1px #ddd;
+}
+#popupDialog {
+    background: white;
+    min-width: 200px;
+    text-align: center;
+    padding: 10px;
+}
+#popupDialog h4 {
+    margin: 1em;
+}
+#popupButtons button {
+    margin-left: 2px;
+}
+div#popupDialog-popup {
+    z-index: 2000;
+}
+.ui-header .ui-title, .ui-footer .ui-title {
+    font-size: inherit;
+    line-height: inherit;
+    text-transform: uppercase;
+    margin-left: 45px;
+}
+.ui-header > .ui-btn {
+    padding: inherit;
+}
+.ui-controlgroup-horizontal .ui-controlgroup-controls {
+    float: right;
+}

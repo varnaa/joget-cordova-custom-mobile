@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget android-activityName="CustomMobile" android-packageName="com.example.custom.mobile" android-versionCode="" id="com.example.custom.mobile" ios-CFBundleVersion="1.0.0" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>Custom Mobile</name>
+    <description>Custom Mobile</description>
+    <author email="info@example.com" href="http://www.example.com">Example Inc</author>
+    <access origin="*" />
+    <allow-navigation href="*" />
+    <preference name="Fullscreen" value="false" />
+    <preference name="useBrowserHistory" value="true" />
+    <preference name="exit-on-suspend" value="false" />
+    <preference name="stay-in-webview" value="true" />
+    <preference name="webviewbounce" value="false" />
+    <preference name="UIWebViewBounce" value="false" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="BackupWebStorage" value="none" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#000000" />
+    <preference name="StatusBarStyle" value="blacktranslucent" />
+    <preference name="EnableViewportScale" value="true" />
+    <preference name="scheme" value="app" />
+    <preference name="MixedContentMode" value="0" />
+    <preference name="hostname" value="localhost" />
+    <preference name="AndroidInsecureFileModeEnabled" value="true" />
+    <feature name="StatusBar">
+        <param name="ios-package" onload="true" value="CDVStatusBar" />
+    </feature>
+    <content src="index.html" />
+    <icon src="res/logo_120x120.png" />
+    <platform name="android">
+        <resource-file src="android-google-services.json" target="app/google-services.json" />
+        <resource-file src="res/xml/file_paths.xml" target="app/src/main/res/xml/file_paths.xml" />
+        <resource-file src="res/icon.png" target="app/src/main/res/drawable/icon.png" />
+        <preference name="android-minSdkVersion" value="22" />
+        <preference name="android-targetSdkVersion" value="31" />
+        <preference name="AndroidXEnabled" value="true" />
+        <preference name="SplashScreen" value="screen" />
+        <preference name="AutoHideSplashScreen" value="true" />
+        <preference name="SplashScreenDelay" value="5000" />
+        <preference name="SplashMaintainAspectRatio" value="true" />
+        <preference name="SplashShowOnlyFirstTime" value="true" />
+        <preference name="FadeSplashScreen" value="false" />
+        <icon density="ldpi" src="res/icon.png" />
+        <icon density="mdpi" src="res/icon.png" />
+        <icon density="hdpi" src="res/icon.png" />
+        <icon density="xhdpi" src="res/icon.png" />
+        <splash density="land-hdpi" src="res/splash_640x1136.png" />
+        <splash density="land-ldpi" src="res/splash_640x1136.png" />
+        <splash density="land-mdpi" src="res/splash_640x1136.png" />
+        <splash density="land-xhdpi" src="res/splash_640x1136.png" />
+        <splash density="port-hdpi" src="res/splash_640x1136.png" />
+        <splash density="port-ldpi" src="res/splash_640x1136.png" />
+        <splash density="port-mdpi" src="res/splash_640x1136.png" />
+        <splash density="port-xhdpi" src="res/splash_640x1136.png" />
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE_PERMISSION"/>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="com.example.mobile.fileprovider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+                <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths" />
+                <meta-data
+                    android:name="com.google.firebase.messaging.default_notification_icon"
+                    android:resource="@drawable/icon" />
+            </provider>
+        </config-file> 
+        <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
+            <application android:requestLegacyExternalStorage="true" android:usesCleartextTraffic="true" />
+        </edit-config>
+    </platform>
+    <platform name="ios">
+        <resource-file src="ios-GoogleService-Info.plist" />
+        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+            <string>Need camera access for file uploads</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSMicrophoneUsageDescription">
+            <string>Need microphone access for file uploads</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
+            <string>Need photo library access for file uploads</string>
+        </edit-config>
+        <icon height="180" src="res/logo_120x120.png" width="180" />
+        <icon height="60" src="res/logo_120x120.png" width="60" />
+        <icon height="120" src="res/logo_120x120.png" width="120" />
+        <icon height="76" src="res/logo_76x76.png" width="76" />
+        <icon height="152" src="res/logo_152x152.png" width="152" />
+        <icon height="40" src="res/AppIcon40x40.png" width="40" />
+        <icon height="80" src="res/logo_120x120.png" width="80" />
+        <icon height="57" src="res/icon.png" width="57" />
+        <icon height="114" src="res/logo_120x120.png" width="114" />
+        <icon height="72" src="res/logo_120x120.png" width="72" />
+        <icon height="144" src="res/logo_120x120.png" width="144" />
+        <icon height="29" src="res/logo_120x120.png" width="29" />
+        <icon height="58" src="res/logo_120x120.png" width="58" />
+        <icon height="87" src="res/logo_120x120.png" width="87" />
+        <icon height="50" src="res/logo_120x120.png" width="50" />
+        <icon height="100" src="res/logo_120x120.png" width="100" />
+        <icon height="167" src="res/logo_167x167.png" width="167" />
+        <icon height="1024" src="res/logo_1024x1024.png" width="1024" />
+        <splash height="480" src="res/splash_640x1136.png" width="320" />
+        <splash height="960" src="res/splash_640x1136.png" width="640" />
+        <splash height="1024" src="res/splash_640x1136.png" width="768" />
+        <splash height="2048" src="res/splash_640x1136.png" width="1536" />
+        <splash height="768" src="res/splash_640x1136.png" width="1024" />
+        <splash height="1536" src="res/splash_640x1136.png" width="2048" />
+        <splash height="1136" src="res/splash_640x1136.png" width="640" />
+        <splash height="1334" src="res/splash_640x1136.png" width="750" />
+        <splash height="2208" src="res/splash_640x1136.png" width="1242" />
+        <splash height="1242" src="res/splash_640x1136.png" width="2208" />
+        <splash src="res/screen/ios/Default@2x~universal~anyany.png" />
+        <splash src="res/screen/ios/Default@2x~universale~comany.png" />
+        <splash src="res/screen/ios/Default@2x~universal~comcom.png" />
+        <splash src="res/screen/ios/Default@3x~universal~anyany.png" />
+        <splash src="res/screen/ios/Default@3x~universal~anycom.png" />
+        <splash src="res/screen/ios/Default@3x~universal~comany.png" />
+    </platform>
+</widget>

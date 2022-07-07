@@ -1,0 +1,70 @@
+name: Build Android
+
+on: [workflow_dispatch]
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+  
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      - name: Add Cordova Android platform
+        run: cordova platform add android@10.1.2
+
+      - name: Add custom cordova-plugin-inappbrowser-download
+        run: cordova plugin add ./cordova-plugin-inappbrowser-download
+
+      - name: Add cordova-plugin-device
+        run: cordova plugin add cordova-plugin-device@2.1.0
+
+      - name: Add cordova-plugin-push
+        run: cordova plugin add @havesource/cordova-plugin-push@3.0.1
+
+      - name: Add cordova-plugin-splashscreen
+        run: cordova plugin add cordova-plugin-splashscreen@6.0.1
+
+      - name: Import keystore and google services JSON
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
+        run: |
+          # import keystore and google services json from secrets
+          echo -n "$KEYSTORE_BASE64" | base64 --decode --output android.keystore
+          echo -n "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode --output android-google-services.json
+
+      - name: Build Android App Bundle
+        run: cordova build android --release -- --keystore=android.keystore --storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --alias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} --password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --packageType=bundle
+
+      - name: Upload release App Bundle
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release
+          path: platforms/android/app/build/outputs/apk/release/app-release.aab
+    
+      - name: Build Android release APK
+        run: cordova build android --release -- --keystore=android.keystore --storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --alias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} --password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --packageType=apk
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release
+          path: platforms/android/app/build/outputs/apk/release/app-release.apk
