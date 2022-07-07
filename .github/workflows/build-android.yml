@@ -24,6 +24,15 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
   
+      - name: Import Android keystore and Google services JSON
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
+        run: |
+          # import keystore and google services json from secrets
+          echo -n "$KEYSTORE_BASE64" | base64 --decode --output android.keystore
+          echo -n "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode --output android-google-services.json
+
       - name: Install Cordova
         run: npm install -g cordova
 
@@ -41,15 +50,6 @@ jobs:
 
       - name: Add cordova-plugin-splashscreen
         run: cordova plugin add cordova-plugin-splashscreen@6.0.1
-
-      - name: Import keystore and google services JSON
-        env:
-          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
-        run: |
-          # import keystore and google services json from secrets
-          echo -n "$KEYSTORE_BASE64" | base64 --decode --output android.keystore
-          echo -n "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode --output android-google-services.json
 
       - name: Build Android App Bundle
         run: cordova build android --release -- --keystore=android.keystore --storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --alias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} --password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --packageType=bundle
