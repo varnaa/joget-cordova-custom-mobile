@@ -77,16 +77,16 @@ jobs:
       - name: Build iOS
         run: cordova build ios --release
 
+      - name: Build IPA
+        run: |
+          # build and export archive as ipa
+          cordova build ios --release --device --codeSignIdentity="iPhone Distribution" --developmentTeam="$TEAM_ID" --packageType="app-store" --provisioningProfile="$PROVISIONING_PROFILE" --buildFlag="CODE_SIGNING_REQUIRED=NO" --buildFlag="CODE_SIGNING_ALLOWED=NO"
+
       - name: Upload Xcode workspace
         uses: actions/upload-artifact@v3
         with:
           name: xcworkspace
           path: platforms/ios/
-
-      - name: Build IPA
-        run: |
-          # build and export archive as ipa
-          cordova build ios --release --device --codeSignIdentity="iPhone Distribution" --developmentTeam="$TEAM_ID" --packageType="app-store" --provisioningProfile="$PROVISIONING_PROFILE" --buildFlag="CODE_SIGNING_REQUIRED=NO" --buildFlag="CODE_SIGNING_ALLOWED=NO"
 
       - name: Upload IPA
         uses: actions/upload-artifact@v3
