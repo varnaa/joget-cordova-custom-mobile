@@ -92,5 +92,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-release
-          path: platforms/ios/build/device/$IPA_FILE
+          path: platforms/ios/build/device/${{ env.IPA_FILE }}
 
