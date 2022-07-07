@@ -30,8 +30,8 @@ jobs:
           GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
         run: |
           # import keystore and google services json from secrets
-          echo -n "$KEYSTORE_BASE64" | base64 --decode --output android.keystore
-          echo -n "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode --output android-google-services.json
+          echo -n "$KEYSTORE_BASE64" | base64 --decode > android.keystore
+          echo -n "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > android-google-services.json
 
       - name: Install Cordova
         run: npm install -g cordova
