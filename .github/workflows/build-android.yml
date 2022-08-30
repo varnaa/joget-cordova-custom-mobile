@@ -39,6 +39,9 @@ jobs:
       - name: Add Cordova Android platform
         run: cordova platform add android@10.1.2
 
+      - name: Add cordova-plugin-androidx-adapter
+        run: cordova plugin add cordova-plugin-androidx-adapter@1.1.3
+
       - name: Add custom cordova-plugin-inappbrowser-download
         run: cordova plugin add ./cordova-plugin-inappbrowser-download
 
