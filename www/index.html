@@ -1,98 +1,151 @@
-<html class="ui-mobile">
-    <head>
-        <title>Custom Mobile</title>
-        <meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,viewport-fit=cover"/>
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: gap: *;"/>
-        <link rel="stylesheet" href="jqm/jquery.mobile-1.4.5.min.css">
-        <link rel="stylesheet" href="nativeDroid2/vendor/waves/waves.min.css" />
-        <link rel="stylesheet" href="nativeDroid2/vendor/wow/animate.css" />
-        <link rel="stylesheet" href="nativeDroid2/css/nativedroid2.css">
-        <link rel="stylesheet" href="mobile.css">
-        <style>
-            /* Prevent FOUC */
-            body { 
-                opacity: 0; 
-                padding-top: constant(safe-area-inset-top);
-                padding-top: env(safe-area-inset-top);
-            }
-        </style>
-    </head>
-    <body>
-        <div id="userview" data-role="page">
-            <div id="header" data-role="header" data-position="fixed" data-tap-toggle="false" data-theme="b">
-                <a id="homeButton" href="#" data-icon="home" data-iconpos="notext" class="ui-btn-left">&nbsp;</a>
-                <h1><span id="headerTitle">Custom Mobile</span></h1>
-                <a id="aboutButton" href="#aboutDialog" data-icon="gear" data-iconpos="notext" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" class="ui-btn-right">&nbsp;</a>
+<html>
+
+<head>
+    <title>Custom Mobile</title>
+    <meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: gap: *;" />
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="bootstrap-custom.css">
+    <link rel="stylesheet" href="mobile.css">
+</head>
+
+<body>
+    <div id="main" class="container">
+        <!-- Cover Image -->
+        <div id="cover" class="row p-2 h-25">
+            <div class="col-10">
+                <h6 class="p-2 mb-5 text-light">Custom Mobile</h6>
             </div>
-            <div id="content" data-role="content">
-                <div id="container">
-                    <ul id="welcome" data-role="listview" data-inset="true">
-                        <li>
-                            <div id="splash">
-                                <img src="logo.png" width="80%">
-                                <br>
-                            </div>                            
-                            <form id="loginForm" method="POST" target="main" data-ajax="false">
-                                <input id="_cordova" name="_cordova" value="true" type="hidden"/>
-                                <label for="url">Profile</label>
-                                <div class="profile_container">
-                                </div>
-                                <input id="url" name="url" placeholder="Server or Userview URL" />
-                                <input id="username" name="j_username" placeholder="Username" />
-                                <input id="password" name="j_password" type="password" placeholder="Password" />
-                                <label for="rememberPassword">Remember Password</label>
-                                <input id="rememberPassword" type="checkbox" value="true" checked="checked" />
-                                <button id="login" name="login" onclick="return MobileApp.login()" data-theme="a">Login</button>
-                            </form>                   
-                            
-                        </li>
-                    </ul>
-                    <p></p>                                        
-                </div>
-            </div>
-            <div id="aboutDialog" data-role="popup">
-                <div data-role="header" data-theme="b">
-                    <h1>About</h1>
-                </div>
-                <div data-role="content" id="about">
-                    <p>
-                        Custom Mobile
-                        <div id="version">
-                            https://www.example.com
-                            <br/>
-                            info@example.com
-                            <br/>
-                            <br/>
-                            VERSION 1.0.0
-                        </div> 
-                        <div id="back">
-                            <a href="#one" data-rel="back" data-role="button" data-inline="true" data-icon="back">Back</a>
-                        </div>
-                    </p>
-                </div>		
+            <div class="col p-2">
+                <a href="#" class="m-2 my-0 float-end text-light" data-bs-toggle="modal" data-bs-target="#about-dialog"><i class="fa fa-circle-info"></span></i></a>
             </div>
         </div>
-        <div id="popupDialog" data-role="popup" data-position-to="window" data-transition="slidedown">
-            <div data-role="content">
-                <h4></h4>
-                <p></p>
-                <div id="popupButtons">
+
+        <!-- Logo -->
+        <div class="row">
+            <div id="logo-container" class="d-flex justify-content-center">
+                <img id="logo" src="logo.png" class="rounded-circle" width="100" height="100">
+                <br>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="row">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card border-0 rounded-3">
+                    <div class="card-body p-4 p-sm-5">
+                        <form id="login-form" method="POST" class="needs-validation">
+                            <input id="_cordova" name="_cordova" value="true" type="hidden" />
+                            <div id="profile-buttons" class="fs-1 float-end">
+                                <a id="profile-add" href="#"><i class="fa fa-circle-plus"></i></a>
+                                <a id="profile-delete" href="#"><i class="fa fa-circle-minus"></i></a>
+                            </div>
+                            <div id="profile-container" class="form-floating mb-3">
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input id="profile" name="profile" class="form-control" placeholder="Profile Name" value="default" />
+                                <label for="profile">Profile Name</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input id="url" name="url" class="form-control" placeholder="Server or Userview URL" />
+                                <label for="url">URL</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input id="username" name="j_username" class="form-control" placeholder="Username" />
+                                <label for="username">Username</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input id="password" name="j_password" class="form-control" type="password" placeholder="Password" />
+                                <label for="password">Password</label>
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                                <input id="rememberPassword" name="rememberPassword" type="checkbox" class="form-check-input" value="true" checked="checked" />
+                                <label for="rememberPassword" class="form-check-label">Remember Password</label>
+                            </div>
+                            <div id="form-buttons" class="d-grid gap-2">
+                                <button id="login" name="login" class="btn btn-primary"
+                                    onclick="return MobileApp.login()">Login</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        <iframe id="main" name="main" src="main.html" sandbox="allow-same-origin allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox"></iframe>        
-        <div id="homeControl">
-            <a class="ui-btn-icon-notext ui-icon-home waves-effect" title="Back to Mobile Home Page"></a>
+    </div>
+
+    <!-- About Dialog -->
+    <div class="modal fade" id="about-dialog" tabindex="-1" role="dialog" aria-labelledby="about-dialog-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="about-dialog-long-title">About</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h7>Custom Mobile</h7>
+                    <div id="version">
+                        https://www.example.com
+                        <br />
+                        info@example.com
+                        <br />
+                        <br />
+                        VERSION 1.0.0
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-        <script src="cordova.js"></script>
-        <script src="jqm/jquery-1.9.1.min.js"></script>
-        <script src="jqm/jquery.mobile-1.4.5.min.js"></script>
-        <script src="jqm/jquery.cookie.js"></script>
-        <script src="nativeDroid2/vendor/waves/waves.min.js"></script>
-        <script src="nativeDroid2/vendor/wow/wow.min.js"></script>
-        <script src="nativeDroid2/js/nativedroid2.js"></script>
-        <script src="nativeDroid2/nd2settings.js"></script>
-        <script src="push.js"></script>
-        <script src="mobile.js"></script>
-    </body>
+    </div>
+
+    <!-- Popup Modal Dialog -->
+    <div class="modal fade" id="popup-dialog" tabindex="-1" role="dialog" aria-labelledby="popup-dialog-title"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="popup-dialog-long-title"></h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4></h4>
+                    <p></p>
+                    <div id="popup-buttons" class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="justify-content-center align-items-center">
+        <div class="spinner-grow text-primary m-1" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow text-secondary m-1" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow text-success m-1" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="jquery/jquery-3.6.0.min.js"></script>
+    <script src="jquery/jquery.cookie.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="mobile.js"></script>
+    <script src="push.js"></script>
+    <script>
+        $(function() {
+            var homeUrl = null; // set to a Joget URL to hardcode the connection profile e.g. https://joget.example.com/jw
+            MobileApp.floatingButton = true; // set true to show a floating button in place of a navigation bar
+            MobileApp.init(homeUrl);
+        });
+    </script>
+</body>
+
 </html>

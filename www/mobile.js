@@ -1,42 +1,62 @@
-var $jqm = $.mobile;
 
 var MobileApp = {
 
-    loginPath: "/web/mobile",
-    inAppBrowser: null,
+    floatingButton: true,
+    geolocation: false,
+    homeUrl: null,
 
-    init: function() {
-//        // fix for ios7 status bar
-//        var updateStatusBar = navigator.userAgent.match(/iphone|ipad|ipod/i) && parseInt(navigator.appVersion.match(/OS (\d)/)[1], 10) >= 7;
-//        if (updateStatusBar) {
-//            document.body.style.webkitTransform = 'translate3d(0, 20px, 0)';
-//        }
+    init: function(homeUrl) {
+        // device-specific initialization
+        document.addEventListener("deviceready", MobileApp.initDevice, false);
 
-        //load profiles
-        var list = MobileApp.getProfileList();
-        var profiles = list.split(";");
+        // reset login form validation 
+        $(".is-invalid").removeClass("is-invalid");
 
-        if (list !== "") {
-            $(".profile_container").append("<select id=\"profile\" name=\"profile\"></select>");
+        // hide profile management buttons
+        $("#profile-buttons").hide();
+        
+        // load profiles
+        var profileList = MobileApp.getProfileList();
+
+        // check for specified home URL
+        if (typeof homeUrl === "string" && homeUrl !== "") {
+            MobileApp.homeUrl = homeUrl;
+        }
+        if (MobileApp.homeUrl && MobileApp.homeUrl !== "") {
+            // hardcoded home URL specified, disable additional profiles
+            var defaultProfile = "default";
+            MobileApp.addProfile(defaultProfile);
+            MobileApp.setHomeUrl(defaultProfile, MobileApp.homeUrl);
+            MobileApp.loadProfile(defaultProfile);
+            $("#profile").hide();
+            $("#url").hide();
+        } else if (profileList !== "") {
+            // populate profile list
+            var profiles = profileList.split(";");
+            $("#profile").hide();
+            $("#profile-container").empty();
+            $("#profile-container").append("<select id=\"profile\" name=\"profile\" class=\"form-select\"></select><label for=\"profile\">Profile</label>");
             for (var i = 0; i < profiles.length; i++) {
                 if (profiles[i] !== "") {
                     $("#profile").append("<option>"+profiles[i]+"</option>");
                 }
             }
 
-            $("#profile").on("change", function(){
+            // load profile on selection
+            $("#profile").on("change", function() {
                 var p = $("#profile").val();
                 MobileApp.loadProfile(p);
             });
 
-            $(".profile_container").append("<div data-role=\"controlgroup\" data-type=\"horizontal\"><a href=\"#\" data-role=\"button\" data-icon=\"plus\" data-iconpos=\"notext\">Add</a><a href=\"#\" data-role=\"button\" data-icon=\"minus\" data-iconpos=\"notext\">Delete</a></div>");
-            $(".profile_container [data-role='controlgroup']").controlgroup();
-
-            $(".profile_container [data-icon='plus']").click(function() {
+            // enable profile management buttons
+            $("#profile-buttons").show();
+            $("#profile-add").off("click");
+            $("#profile-add").on("click", function() {
                  window.location.hash = "#newprofile";
                  MobileApp.newProfile();
             });
-            $(".profile_container [data-icon='minus']").click(function() {
+            $("#profile-delete").off("click");
+            $("#profile-delete").on("click", function() {
                 if (confirm("Delete this profile?")) {
                     MobileApp.deleteProfile();
                 }
@@ -44,7 +64,7 @@ var MobileApp = {
 
             // load last profile
             var profile = MobileApp.getLastLogin();
-            if (list !== "") {
+            if (profileList !== "") {
                 if (profiles.indexOf(profile) < 0) {
                     profile = profiles[0];
                     if (profile === "") {
@@ -65,11 +85,12 @@ var MobileApp = {
             }
 
         } else {
+            // no existing profiles, create new one
             MobileApp.newProfile();
-            $("#loginForm #cancel").remove();
+            $("#login-form #cancel").remove();
         }
 
-
+        // handle back button
         $(document).on("backbutton", function(e) {
             if ($("#header:visible").length > 0) {
                 e.preventDefault();
@@ -142,7 +163,7 @@ var MobileApp = {
         }
     },
 
-    setLastLogin: function(profile){
+    setLastLogin: function(profile) {
         MobileApp.setData("lastLogin", profile);
     },
 
@@ -190,7 +211,8 @@ var MobileApp = {
                 fullUrl = fullUrl + "/jw";
             }
 
-            fullUrl = fullUrl + MobileApp.loginPath;
+            var loginPath = "/web/mobile";
+            fullUrl = fullUrl + loginPath;
         }
         return fullUrl;
     },
@@ -207,7 +229,6 @@ var MobileApp = {
         profiles.push(profile);
         profileList = profiles.join(";");
         MobileApp.setData("profiles", profileList);
-        window.location.hash = "";
     },
 
     deleteProfile: function() {
@@ -224,7 +245,8 @@ var MobileApp = {
         profileList = profiles.join(";");
         MobileApp.setData("profiles", profileList);
 
-        $(".profile_container").html("");
+        $("#profile-container").html("");
+        $("#profile-buttons").hide();
         try {
             MobilePush.unregisterDevice(profile);
         } catch(e) {
@@ -234,15 +256,15 @@ var MobileApp = {
     },
 
     newProfile: function() {
-        $(".profile_container").html("");
-        $(".profile_container").append("<input id=\"profile\" name=\"profile\" placeholder=\"Profile Name\" />");
-        $("#profile").textinput();
+        $("#profile-container").html("");
+        $("#profile-buttons").hide();        
+        $("#profile").show();
 
-        if ($("#loginForm #cancel").length == 0) {
-            $("#loginForm").append('<button id="cancel" name="cancel" class="form-button ui-btn ui-shadow ui-corner-all">Cancel</button>');
-            $("#loginForm #cancel").on("click", function() {
+        if ($("#login-form #cancel").length == 0) {
+            $("#form-buttons").append('<button id="cancel" name="cancel" class="btn btn-secondary">Cancel</button>');
+            $("#login-form #cancel").on("click", function() {
                 $(this).remove();
-                history.back(-1);
+                MobileApp.init();
             });
         }
 
@@ -256,14 +278,15 @@ var MobileApp = {
         var password = (profile === "") ? "" : MobileApp.getPassword(profile);
         var rememberPassword = (profile === "") ? "" : MobileApp.getRememberPassword(profile);
 
-        $("#url").val(homeUrl).textinput("refresh");
-        $("#username").val(username).textinput("refresh");
-        $("#password").val(password).textinput("refresh");
+        $("#profile").val(profile);
+        $("#url").val(homeUrl);
+        $("#username").val(username);
+        $("#password").val(password);
         if (rememberPassword == "true") {
-            $("#rememberPassword").prop('checked', true).checkboxradio('refresh');
+            $("#rememberPassword").prop('checked', true);
         }
         if (!homeUrl || homeUrl == '') {
-            $("#url").val("").textinput("refresh");
+            $("#url").val("");
             $("#url").focus();
         } else if (!username || username == '') {
             $("#username").focus();
@@ -283,20 +306,20 @@ var MobileApp = {
 
         $(".required").remove();
         if (profile === "") {
-            $("#profile").parent().after("<span class=\"required\">This field is required</span>");
+            $("#profile").addClass("is-invalid");
         }
         if (url === "") {
-            $("#url").parent().after("<span class=\"required\">This field is required</span>");
+            $("#url").addClass("is-invalid");
         }
         if (username === "") {
-            $("#username").parent().after("<span class=\"required\">This field is required</span>");
+            $("#username").addClass("is-invalid");
         }
         if (password === "") {
-            $("#password").parent().after("<span class=\"required\">This field is required</span>");
+            $("#password").addClass("is-invalid");
         }
 
         if (profile && profile != "" && url && url != "" && username && username != "" && password && password != "") {
-            $.mobile.loading('show');
+            MobileApp.showLoading();
 
             var fullUrl = MobileApp.getFullUrl(url);
             try {
@@ -317,7 +340,7 @@ var MobileApp = {
                             error: function (data) {
                                 if (data.status === 401 || data.status === 404) {
                                     success = true;
-                                    if ($(".ui-input-text #profile").length > 0) {
+                                    if ($("#profile").length > 0) {
                                         MobileApp.addProfile(profile);
                                     }
 
@@ -333,8 +356,11 @@ var MobileApp = {
 
                                     MobilePush.registerDevice();
                                     MobileApp.loginAndNavigate(fullUrl, username, password);
+
+                                    MobileApp.init();
+
                                 } else {
-                                    $.mobile.loading('hide');
+                                    MobileApp.hideLoading();
                                     alert("Invalid Server or Unsupported Version");
                                 }
                             }
@@ -342,16 +368,14 @@ var MobileApp = {
                     } catch (e) {
                     }
                     setTimeout(function () {
-                        if (!success) {
-                            $.mobile.loading('hide');
-                        }
-                    }, 5000);
+                        MobileApp.hideLoading();
+                    }, 10000);
                 } else {
-                    $.mobile.loading('hide');
+                    MobileApp.hideLoading();
                     alert("Invalid URL " + fullUrl);
                 }
             } catch (e) {
-                $.mobile.loading('hide');
+                MobileApp.hideLoading();
                 alert("Invalid URL: " + fullUrl);
             }
             return false;
@@ -361,7 +385,7 @@ var MobileApp = {
     },
 
     navigate: function(url) {
-        $.mobile.loading('show');
+        MobileApp.showLoading();
 
         var login = false;
 
@@ -405,7 +429,6 @@ var MobileApp = {
         var search = parser.search;
         var loginUrl = hostUri + "/jw/j_spring_security_check";    
         var credentials = "j_username=" + encodeURIComponent(username) + "&j_password=" + encodeURIComponent(password);
-        $.mobile.loading('hide');
         var newUrl = url;
         newUrl += (search) ? "&" : "?";
         newUrl += "_cordova=true";
@@ -414,88 +437,215 @@ var MobileApp = {
 
     showFrame: function(url, loginUrl, credentials) {
         // implementation using InAppBrowser plugin https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-inappbrowser/
-        var ios = device && device.platform === "iOS";
-        if (!ios) {
-            // for Android, use AJAX call to SSO
-            var options = "location=yes,footer=no,toolbar=yes,toolbarcolor=#000000,navigationbuttoncolor=#ffffff,lefttoright=yes,closebuttoncaption=Home,hideurlbar=yes,zoom=no";
-            if (loginUrl) {
-                $.post(loginUrl + "?", credentials)
-                    .done(function() {
-                        MobileApp.inAppBrowser = cordova.InAppBrowser.open(url, "_blank", options);
-                    });
-            } else {
-                cordova.InAppBrowser.open(url, "_blank", options);
+        // use InAppBrowser.executeScript method because session cookies are not passed over to the webview
+        var inAppBrowser = (typeof cordova !== "undefined") ? cordova.InAppBrowser : window;
+        var showLocationBar = (MobileApp.floatingButton) ? "no" : "yes";
+        MobileApp.inAppBrowser = inAppBrowser.open(url, "_blank", "hidden=yes,location=" + showLocationBar + ",toolbar=yes,toolbarcolor=#000000,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff,toolbartranslucent=no,toolbarposition=bottom,hideurlbar=yes,zoom=no");
+        if (loginUrl) {
+            // perform login
+            var callback = function() {
+                var loginScript = " \
+                    try { \
+                        var xhttp = new XMLHttpRequest(); \
+                        xhttp.onreadystatechange = function() { \
+                            if (this.readyState == 4) { \
+                                console.log('login done'); \
+                                window.location.href='" + url + "'; \
+                                var data = {'action': 'show', 'message': 'true'}; \
+                                var json = JSON.stringify(data); \
+                                window.onload=function(){webkit.messageHandlers.cordova_iab.postMessage(json);}; \
+                            } \
+                        }; \
+                        xhttp.open('POST', '" + loginUrl + "', false); \
+                        xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); \
+                        console.log('logging in'); \
+                        xhttp.send('" + credentials + "'); \
+                        document.body.innerHTML = '<div style=\"margin-left:45%;margin-top:10%\"><img src=\"/jw/xadmin/lib/layui/css/modules/layer/default/loading-0.gif\"></div>'; \
+                    } catch(e) { \
+                        console.log(e); \
+                    } ";
+                try {
+                    MobileApp.inAppBrowser.eval(loginScript);
+                    MobileApp.hideLoading();
+                } catch(e) {
+                    console.log(e);
+                }
+                try {
+                    MobileApp.inAppBrowser.executeScript({code: loginScript});
+                } catch(e) {
+                    console.log(e);
+                }
+                console.log("login: " + loginUrl);
+                MobileApp.inAppBrowser.removeEventListener("loadstart", callback);
+                MobileApp.inAppBrowser.removeEventListener("load", callback);
+            };
+            MobileApp.inAppBrowser.addEventListener("loadstart", callback);
+            MobileApp.inAppBrowser.addEventListener("load", callback);
+        }
+
+        // insert custom JavaScript codes into the InAppBrowser window once it stops loading
+        MobileApp.inAppBrowser.addEventListener("loadstop", function() {
+            // show the InAppBrowser window
+            MobileApp.hideLoading();
+            MobileApp.inAppBrowser.show();
+
+            // InAppBrowser message event listener
+            MobileApp.inAppBrowser.addEventListener("message", function(params) {
+                var action = params.data.action;
+                var message = params.data.message;
+                MobileApp.cordovaAction(action, message, params);                
+            });
+
+            // insert utility function cordovaAction into InAppBrowser
+            MobileApp.inAppBrowser.executeScript({ code: "\
+                var cordovaAction = function(action, message) { \
+                    var data = {'action': action, 'message': message}; \
+                    var json = JSON.stringify(data); \
+                    webkit.messageHandlers.cordova_iab.postMessage(json); \
+                } \
+                "
+            });
+            console.log("Injected function cordovaAction");
+
+            // update file download links to force attachment download and hide page loader overlay
+            MobileApp.inAppBrowser.executeScript({ code: '\
+                $(".form-fileupload a[target=_blank]").each(function(index, el) { \
+                    var href = $(el).attr("href"); \
+                    if (href.endsWith(".")) { \
+                        href = href + "?attachment=true"; \
+                    } \
+                    $(el).attr("href", href); \
+                    $(el).off("click"); \
+                    $(el).on("click", function() {  \
+                        $(\".page-loader\").hide(); \
+                    }); \
+                }); \
+            '
+            });
+            console.log("Updated file download links");
+
+            if (MobileApp.floatingButton) {
+                // insert floating button code into InAppBrowser
+                MobileApp.inAppBrowser.executeScript({ code: "\
+                    if ($('#floatingButton').length == 0) {\
+                        $(document.body).append($(\"<div id='floatingButton'><i class='fa fa-power-off'></i></div>\"));	\
+                    }\
+                    $('#floatingButton').show(); \
+                    $('#floatingButton').on('click', function() { \
+                        cordovaAction('close'); \
+                    }); \
+                    "
+                });
+                console.log("Inserted floating button");
+
+                // insert floating button CSS into InAppBrowser
+                MobileApp.inAppBrowser.insertCSS({ code: "\
+                    #floatingButton { \
+                        z-index: 1000000; \
+                        display: block; \
+                        background: #607D8B; \
+                        position: fixed; \
+                        bottom: 10px; \
+                        left: 10px; \
+                        width: 38px; \
+                        height: 38px; \
+                        border-radius: 20px; \
+                        opacity: 0.8; \
+                        color: white; \
+                        text-align: center; \
+                        font-size: 28px; \
+                        box-shadow: 1px 1px 1px #555; \
+                        pointer: cursor; \
+                    } \
+                    #adminControl { \
+                        display: none !important; \
+                    } \
+                    "
+                });
+                console.log("Inserted floating button CSS");
             }
-        } else {
-            // for iOS, use InAppBrowser.executeScript method because session cookies are not passed over to the webview
-            MobileApp.inAppBrowser = cordova.InAppBrowser.open(url, "_blank", "location=no,toolbar=yes,toolbartranslucent=no,toolbarposition=bottom,closebuttoncaption=Home,hideurlbar=yes,zoom=no");
-            if (loginUrl) {
-                var loggedIn = false;
-                var callback = function() {
-                    if (!loggedIn && window.location !== 'about:blank') {
-                        var loginScript = " window.onload=function() { try { var xhttp = new XMLHttpRequest(); xhttp.open('POST', '" + loginUrl + "', false); xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); xhttp.send('" + credentials + "'); } catch(e) { alert(e) }; }";
-                        MobileApp.inAppBrowser.executeScript({code: loginScript});
-                        console.log("login: " + loginUrl);
-                        loggedIn = true;
-                    }
-                };
-                MobileApp.inAppBrowser.addEventListener('loadstart', callback);
-            }
+        });
+
+        // init geolocation permission
+        if (MobileApp.geolocation && navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) { console.log(position) });
+            console.log("Geolocation initialized");
         }
     },
 
     closeFrame: function() {
-        $("#userview").fadeIn();
+        $("#main").fadeIn();
         MobileApp.inAppBrowser.close();
     },
 
     popup: function(title, message, url) {
         if (MobileApp.inAppBrowser) {
-            MobileApp.inAppBrowser.hide();
+            try {
+                MobileApp.inAppBrowser.hide();
+            } catch(e) {
+                console.log(e);
+            }
         }
-        $("#popupDialog h4").text(title);
-        $("#popupDialog p").text(message);
-        $("#popupButtons").empty();
+        $("#popup-dialog h4").text(title);
+        $("#popup-dialog p").text(message);
+        $("#popup-buttons").empty();
         if (url) {
-            var navButton = $("<button>Go</button>");
+            var navButton = $('<button class="btn btn-primary" data-bs-dismiss="modal">Go</button>');
             navButton.on("click", function() {
-                $("#popupDialog").popup().popup("close");
+                $("#popup-dialog").modal("hide");
                 MobileApp.navigate(url);
             });
-            $("#popupButtons").append(navButton);
-            var cancelButton = $("<button>Cancel</button>");
+            $("#popup-buttons").append(navButton);
+            var cancelButton = $('<button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>');
             cancelButton.on("click", function() {
-                $("#popupDialog").popup().popup("close");
+                $("#popup-dialog").modal("hide");
                 MobileApp.inAppBrowser.show();
             });
-            $("#popupButtons").append(cancelButton);
+            $("#popup-buttons").append(cancelButton);
         } else {
-            var okButton = $("<button>OK</button>");
+            var okButton = $('<button class="btn btn-primary" data-bs-dismiss="modal">OK</button>');
             okButton.on("click", function() {
-                $("#popupDialog").popup().popup("close");
+                $("#popup-dialog").modal("hide");
                 MobileApp.inAppBrowser.show();
             });
-            $("#popupButtons").append(okButton);
+            $("#popup-buttons").append(okButton);
         }
-        $("#popupDialog").popup().popup("open");
-    }
+        $("#popup-dialog").modal("show");
+    },
 
+    showLoading: function() {
+        $("#loading").show();
+        $("#loading").addClass("d-flex");
+    },
+
+    hideLoading: function() {
+        $("#loading").hide();
+        $("#loading").removeClass("d-flex");
+    },
+
+    cordovaAction: function(action, message, params) {
+        console.log("action: " + params.data.action);
+        if (action === "close") {
+            MobileApp.inAppBrowser.close();
+        } else if (action === "geolocation") {
+            navigator.geolocation.getCurrentPosition(function(position) { 
+                console.log(position) 
+            });
+        } else if (action === "vibration") {
+            navigator.vibrate(1000);
+        } else if (action === "url") {
+            var url = message;
+            MobileApp.showFrame(url);
+        } else if (action === "popup") {
+            MobileApp.popup(message);
+        } else if (action === "alert") {
+            var message = params.data.message;
+            navigator.notification.alert(message);
+        } else {
+            MobileApp.inAppBrowser.show();
+        }
+    },
 }
-$(document).on("pageinit", function() {
+$(function() {
     MobileApp.init();
 });
-document.addEventListener("deviceready", MobileApp.initDevice, false);
-window.addEventListener("hashchange", function(){
-    if (!window.location.hash) {
-        $(".profile_container").html("");
-        MobileApp.init();
-    }
-});
-// open URLs in InAppBrowser
-window.addEventListener('message', function(message) {
-    var url = message.data;
-    if (url.startsWith("http://") || url.startsWith("https://")) {
-        cordova.InAppBrowser.open(url, "_blank");
-    }
-});
-
