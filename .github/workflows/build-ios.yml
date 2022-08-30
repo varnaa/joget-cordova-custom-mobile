@@ -74,6 +74,15 @@ jobs:
       - name: Add cordova-plugin-media-capture
         run: cordova plugin add cordova-plugin-media-capture@4.0.0
 
+      - name: Add cordova-plugin-dialogs
+        run: cordova plugin add cordova-plugin-dialogs@2.0.2
+
+      - name: Add cordova-plugin-vibration
+        run: cordova plugin add cordova-plugin-vibration@3.1.1
+
+      - name: Add cordova-plugin-geolocation
+        run: cordova plugin add cordova-plugin-geolocation@4.1.0
+
       - name: Build iOS
         run: cordova build ios --release
 

@@ -90,6 +90,15 @@
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
             <string>Need photo library access for file uploads</string>
         </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>Need location access to determine appropriate region</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysAndWhenInUseUsageDescription">
+            <string>Need location access to determine appropriate region</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
+            <string>Need location access to determine appropriate region</string>
+        </edit-config>
         <icon height="180" src="res/logo_120x120.png" width="180" />
         <icon height="60" src="res/logo_120x120.png" width="60" />
         <icon height="120" src="res/logo_120x120.png" width="120" />
