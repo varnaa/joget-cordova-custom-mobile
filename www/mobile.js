@@ -369,7 +369,7 @@ var MobileApp = {
                     }
                     setTimeout(function () {
                         MobileApp.hideLoading();
-                    }, 10000);
+                    }, 30000);
                 } else {
                     MobileApp.hideLoading();
                     alert("Invalid URL " + fullUrl);
@@ -439,8 +439,9 @@ var MobileApp = {
         // implementation using InAppBrowser plugin https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-inappbrowser/
         // use InAppBrowser.executeScript method because session cookies are not passed over to the webview
         var inAppBrowser = (typeof cordova !== "undefined") ? cordova.InAppBrowser : window;
-        var showLocationBar = (MobileApp.floatingButton) ? "no" : "yes";
-        MobileApp.inAppBrowser = inAppBrowser.open(url, "_blank", "hidden=yes,location=" + showLocationBar + ",toolbar=yes,toolbarcolor=#000000,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff,toolbartranslucent=no,toolbarposition=bottom,hideurlbar=yes,zoom=no");
+        var ios = typeof device !== "undefined" && device.platform === "iOS";
+        var showLocationBar = (MobileApp.floatingButton && !ios) ? "no" : "yes"; // location bar should always be shown in iOS so that back navigation buttons are available e.g. when viewing images/documents
+        MobileApp.inAppBrowser = inAppBrowser.open(url, "_blank", "hidden=yes,location=" + showLocationBar + ",toolbar=" + showLocationBar + ",toolbarcolor=#000000,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff,closebuttoncaption=X,toolbartranslucent=no,toolbarposition=bottom,hideurlbar=yes,zoom=no");
         if (loginUrl) {
             // perform login
             var callback = function() {
@@ -464,22 +465,27 @@ var MobileApp = {
                     } catch(e) { \
                         console.log(e); \
                     } ";
-                try {
-                    MobileApp.inAppBrowser.eval(loginScript);
-                    MobileApp.hideLoading();
-                } catch(e) {
-                    console.log(e);
-                }
-                try {
-                    MobileApp.inAppBrowser.executeScript({code: loginScript});
-                } catch(e) {
-                    console.log(e);
+                if (MobileApp.inAppBrowser.executeScript) {
+                    // InAppBrowser detected, use executeScript to insert code
+                    try {
+                        MobileApp.inAppBrowser.executeScript({code: loginScript});
+                    } catch(e) {
+                        console.log(e);
+                    }
+                } else {
+                    // fallback to standard JS eval function
+                        try {
+                        MobileApp.inAppBrowser.eval(loginScript);
+                        MobileApp.hideLoading();
+                    } catch(e) {
+                        console.log(e);
+                    }
                 }
                 console.log("login: " + loginUrl);
-                MobileApp.inAppBrowser.removeEventListener("loadstart", callback);
+                MobileApp.inAppBrowser.removeEventListener("loadstop", callback);
                 MobileApp.inAppBrowser.removeEventListener("load", callback);
             };
-            MobileApp.inAppBrowser.addEventListener("loadstart", callback);
+            MobileApp.inAppBrowser.addEventListener("loadstop", callback);
             MobileApp.inAppBrowser.addEventListener("load", callback);
         }
 
