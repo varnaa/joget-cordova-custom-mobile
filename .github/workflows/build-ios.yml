@@ -83,6 +83,9 @@ jobs:
       - name: Add cordova-plugin-geolocation
         run: cordova plugin add cordova-plugin-geolocation@4.1.0
 
+      - name: Add cordova-plugin-fingerprint-aio
+        run: cordova plugin add cordova-plugin-fingerprint-aio@5.0.1
+
       - name: Build iOS
         run: cordova build ios --release
 

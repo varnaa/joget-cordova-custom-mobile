@@ -66,6 +66,9 @@ jobs:
       - name: Add cordova-plugin-geolocation
         run: cordova plugin add cordova-plugin-geolocation@4.1.0
 
+      - name: Add cordova-plugin-fingerprint-aio
+        run: cordova plugin add cordova-plugin-fingerprint-aio@5.0.1
+
       - name: Build Android release APK
         run: cordova build android --release -- --keystore=android.keystore --storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --alias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} --password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --packageType=apk
 

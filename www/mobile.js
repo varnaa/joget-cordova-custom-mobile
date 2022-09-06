@@ -297,6 +297,35 @@ var MobileApp = {
         }
     },
 
+    loginBiometric: function() {
+        if (typeof Fingerprint !== "undefined") {
+            // biometric plugin available (https://github.com/niklasmerz/cordova-plugin-fingerprint-aio), supports Fingerprint and Face ID)
+            Fingerprint.isAvailable(isAvailableSuccess, isAvailableError);
+                function isAvailableSuccess(result) {
+                    console.log("loginWithBiometric: " + result + " available");
+
+                    // authenticate using biometric
+                    Fingerprint.show({ description: "Secure Login" }, successCallback, errorCallback);
+                        function successCallback() {
+                            console.log("loginWithBiometric: Authentication successful");
+                            MobileApp.login();
+                        }
+                        function errorCallback(error) {
+                            console.log("loginWithBiometric: " + error.message);
+                        }
+                }    
+                function isAvailableError(error) {
+                    // biometric not available, use default login
+                    console.log("loginWithBiometric error: " + error);
+                    MobileApp.login();
+                }
+        } else {
+            // biometric not available, use default login
+            MobileApp.login();
+        }
+        return false;
+    },
+
     login: function() {
         var profile = $("#profile").val().trim();
         var url = $("#url").val().trim();
