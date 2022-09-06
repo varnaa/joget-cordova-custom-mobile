@@ -195,7 +195,7 @@ var MobileApp = {
 
         //if no http/https, add http
         if (!url.toLowerCase().match(/(http|https):\/\/.*$/)) {
-            url = "http://" + url;
+            url = "https://" + url;
         }
 
         var fullUrl;
