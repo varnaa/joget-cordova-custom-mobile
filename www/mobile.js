@@ -552,7 +552,9 @@ var MobileApp = {
                     $(el).attr("href", href); \
                     $(el).off("click"); \
                     $(el).on("click", function() {  \
-                        $(\".page-loader\").hide(); \
+                        setTimeout(function() { \
+                            $(".page-loader").hide(); \
+                        }, 2000); \
                     }); \
                 }); \
             '
