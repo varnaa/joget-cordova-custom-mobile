@@ -25,3 +25,16 @@
     opacity: 0.5;
     filter: alpha(opacity=50);
 }
+h6.p-2.mb-5.text-light {
+    color: #ffffff !important;
+}
+button {
+    background: teal !important;
+}
+#profile-buttons a {
+    color: teal;
+}
+input.form-check-input:checked {
+    background-color: teal !important;
+    border-color: teal !important;
+}
