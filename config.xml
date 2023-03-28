@@ -2,7 +2,7 @@
 <widget android-activityName="CustomMobile" android-packageName="com.example.custom.mobile" android-versionCode="10000" id="com.example.custom.mobile" ios-CFBundleVersion="1.0.0" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>Custom Mobile</name>
     <description>Custom Mobile</description>
-    <author email="info@example.com" href="http://www.example.com">Example Inc</author>
+    <author email="info@example.com" href="https://www.example.com">Example Inc</author>
     <access origin="*" />
     <allow-navigation href="*" />
     <preference name="Fullscreen" value="false" />
