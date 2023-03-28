@@ -131,7 +131,7 @@ var MobilePush = {
         if (!url.toLowerCase().match(/(http|https):\/\/.*\/.*$/)) {
             pushUrl = pushUrl + "/jw";
         }
-        pushUrl = pushUrl + MobileApp.loginPath;
+        pushUrl = pushUrl + "/web/mobile";
         return pushUrl;
     }    
     
