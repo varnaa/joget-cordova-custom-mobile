@@ -37,6 +37,13 @@ var MobilePush = {
         push.on('error', function (e) {
             console.log("error: " + e.message);            
         });
+
+        var permissions = cordova.plugins.permissions;
+        permissions.hasPermission(permissions.POST_NOTIFICATIONS, function( status ){
+            if (!status.hasPermission) {
+                permissions.requestPermission(permissions.POST_NOTIFICATIONS);
+            }
+        });
     },
     
     registerDevice: function() {
