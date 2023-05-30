@@ -57,7 +57,7 @@ jobs:
         run: npm install -g cordova
 
       - name: Add Cordova iOS platform
-        run: cordova platform add ios@6.2.0
+        run: cordova platform add ios@6.3.0
 
       - name: Add custom cordova-plugin-inappbrowser
         run: cordova plugin add cordova-plugin-inappbrowser@5.0.0
@@ -66,7 +66,7 @@ jobs:
         run: cordova plugin add cordova-plugin-device@2.1.0
 
       - name: Add cordova-plugin-push
-        run: cordova plugin add @havesource/cordova-plugin-push@3.0.1
+        run: cordova plugin add @havesource/cordova-plugin-push@dev
 
       - name: Add cordova-plugin-statusbar
         run: cordova plugin add cordova-plugin-statusbar@3.0.0
