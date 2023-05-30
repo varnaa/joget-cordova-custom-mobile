@@ -57,7 +57,7 @@ public class InAppBrowserDownloads implements DownloadListener {
         InAppBrowserDownloads.this.mimetype = mimetype;
         InAppBrowserDownloads.this.contentLength = contentLength;
 
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 23 && Build.VERSION.SDK_INT <= 30) {
             if (plugin.cordova.getActivity().checkSelfPermission(
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 processDownload();
@@ -193,8 +193,7 @@ public class InAppBrowserDownloads implements DownloadListener {
                 if (ContentResolver.SCHEME_FILE.equals(attachmentUri.getScheme())) {
                     // FileUri - Convert it to contentUri.
                     File file = new File(attachmentUri.getPath());
-                    attachmentUri = FileProvider.getUriForFile(context,
-                            plugin.cordova.getActivity().getPackageName() + ".provider", file);
+                    attachmentUri = FileProvider.getUriForFile(context, plugin.cordova.getActivity().getPackageName() + ".provider", file);
                 }
 
                 Intent openAttachmentIntent = new Intent(Intent.ACTION_VIEW);

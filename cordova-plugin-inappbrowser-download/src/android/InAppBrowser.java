@@ -93,6 +93,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.webkit.DownloadListener;
+import androidx.core.content.FileProvider;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class InAppBrowser extends CordovaPlugin {
@@ -960,7 +961,8 @@ public class InAppBrowser extends CordovaPlugin {
                             }
                             if(photoFile != null) {
                                 mCM = "file:" + photoFile.getAbsolutePath();
-                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                                Uri uri = FileProvider.getUriForFile(cordova.getActivity().getApplicationContext(), cordova.getActivity().getPackageName() + ".provider", photoFile);
+                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                             } else {
                                 takePictureIntent = null;
                             }
@@ -1108,7 +1110,7 @@ public class InAppBrowser extends CordovaPlugin {
     private File createImageFile() throws IOException {
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "img_"+timeStamp+"_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File storageDir = cordova.getActivity().getApplicationContext().getExternalFilesDir(null);
         return File.createTempFile(imageFileName,".jpg",storageDir);
     }
 
