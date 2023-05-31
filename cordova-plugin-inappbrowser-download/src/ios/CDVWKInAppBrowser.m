@@ -37,7 +37,7 @@
 #define    IAB_BRIDGE_NAME @"cordova_iab"
 
 #define    TOOLBAR_HEIGHT 44.0
-#define    LOCATIONBAR_HEIGHT 21.0
+#define    LOCATIONBAR_HEIGHT 0.0
 #define    FOOTER_HEIGHT ((TOOLBAR_HEIGHT) + (LOCATIONBAR_HEIGHT))
 
 #pragma mark CDVWKInAppBrowser
@@ -861,7 +861,7 @@ BOOL isExiting = FALSE;
     self.addressLabel.clipsToBounds = YES;
     self.addressLabel.contentMode = UIViewContentModeScaleToFill;
     self.addressLabel.enabled = YES;
-    self.addressLabel.hidden = NO;
+    self.addressLabel.hidden = YES;
     self.addressLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     
     if ([self.addressLabel respondsToSelector:NSSelectorFromString(@"setMinimumScaleFactor:")]) {

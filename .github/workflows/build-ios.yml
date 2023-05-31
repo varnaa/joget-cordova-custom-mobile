@@ -60,7 +60,7 @@ jobs:
         run: cordova platform add ios@6.3.0
 
       - name: Add custom cordova-plugin-inappbrowser
-        run: cordova plugin add cordova-plugin-inappbrowser@5.0.0
+        run: cordova plugin add ./cordova-plugin-inappbrowser-download
 
       - name: Add cordova-plugin-device
         run: cordova plugin add cordova-plugin-device@2.1.0
