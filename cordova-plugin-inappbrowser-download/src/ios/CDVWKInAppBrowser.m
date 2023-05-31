@@ -1148,6 +1148,18 @@ BOOL isExiting = FALSE;
     // orientation landscapeLeft or landscapeRight: status bar height is 0 in but lets account for it in case things ever change in the future
     viewBounds.origin.y = statusBarHeight;
     
+    CGFloat leftMargin = [[[UIApplication sharedApplication] delegate] window].safeAreaInsets.left;
+    CGFloat rightMargin = [[[UIApplication sharedApplication] delegate] window].safeAreaInsets.right;
+    CGFloat screenWidth = [[UIScreen mainScreen] bounds].size.width;
+
+    if (leftMargin > 0) {
+        viewBounds.origin.x = leftMargin;
+        viewBounds.size.width = screenWidth - leftMargin - rightMargin;
+    } else {
+        viewBounds.origin.x = 0;
+        viewBounds.size.width = screenWidth;
+    }
+    
     // account for web view height portion that may have been reduced by a previous call to this method
     viewBounds.size.height = viewBounds.size.height - statusBarHeight + lastReducedStatusBarHeight;
     lastReducedStatusBarHeight = statusBarHeight;
