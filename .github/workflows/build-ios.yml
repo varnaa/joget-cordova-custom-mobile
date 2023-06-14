@@ -15,6 +15,13 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
+      - name: Update ios-CFBundleVersion
+        run: |
+          # update ios-CFBundleVersion
+          TIMESTAMP=`date '+%Y%m%d%H%M'`
+          sed -i'.bak' "s/ios-CFBundleVersion=\"1.0.0\"/ios-CFBundleVersion=\"${TIMESTAMP}\"/g" config.xml 
+          cat config.xml
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -29,7 +36,7 @@ jobs:
           BUILD_GOOGLESERVICE_PLIST_BASE64: ${{ secrets.IOS_GOOGLESERVICE_PLIST_BASE64 }}
         run: |
           # import GoogleService-info plist
-          echo -n "$BUILD_GOOGLESERVICE_PLIST_BASE64" | base64 --decode --output ios-GoogleService-Info.plist
+          echo -n "$BUILD_GOOGLESERVICE_PLIST_BASE64" | base64 --decode --output GoogleService-Info.plist
 
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
@@ -43,6 +50,7 @@ jobs:
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security default-keychain -s "$KEYCHAIN_PATH"
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
           # import certificate to keychain
@@ -98,7 +106,7 @@ jobs:
       - name: Build IPA
         run: |
           # build and export archive as ipa
-          cordova build ios --release --device --codeSignIdentity="iPhone Distribution" --developmentTeam="$TEAM_ID" --packageType="app-store" --provisioningProfile="$PROVISIONING_PROFILE" --buildFlag="CODE_SIGNING_REQUIRED=NO" --buildFlag="CODE_SIGNING_ALLOWED=NO"
+          cordova build ios --release --device --codeSignIdentity="Apple Distribution" --developmentTeam="$TEAM_ID" --packageType="app-store" --provisioningProfile="$PROVISIONING_PROFILE" --buildFlag="PROVISIONING_PROFILE_SPECIFIER=$PROVISIONING_PROFILE" --buildFlag="CODE_SIGN_STYLE=Manual"
 
       - name: Upload IPA
         uses: actions/upload-artifact@v3

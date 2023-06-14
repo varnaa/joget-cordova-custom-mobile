@@ -88,8 +88,9 @@
         </edit-config>
     </platform>
     <platform name="ios">
+        <preference name="deployment-target" value="11.0" />
         <preference name="SwiftVersion" value="5.0" />
-        <resource-file src="ios-GoogleService-Info.plist" />
+        <resource-file src="GoogleService-Info.plist" />
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
             <string>Need camera access for file uploads</string>
         </edit-config>
