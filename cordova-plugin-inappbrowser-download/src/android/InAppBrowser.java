@@ -55,6 +55,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.PermissionRequest;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -162,6 +163,8 @@ public class InAppBrowser extends CordovaPlugin {
     private String[] allowedSchemes;
     private InAppBrowserClient currentClient;
     private String mCM;
+    private PermissionRequest permissionRequest;
+    private static final int CAMERA_REQ_CODE = 124;
 
     /**
      * Executes the request and returns PluginResult.
@@ -988,6 +991,18 @@ public class InAppBrowser extends CordovaPlugin {
 
                         return true;
                     }
+
+                    // Grant permissions for camera
+                    @Override
+                    public void onPermissionRequest(final PermissionRequest request) {
+                        if(Build.VERSION.SDK_INT >=23 && (cordova.getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || cordova.getActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+                            cordova.requestPermissions(InAppBrowser.this, CAMERA_REQ_CODE, new String[]{Manifest.permission.CAMERA});
+                            permissionRequest = request;
+                        } else {
+                            // Permissions are already granted, proceed
+                            request.grant(request.getResources());
+                        }
+                    }
                 });
                 currentClient = new InAppBrowserClient(thatWebView, edittext, beforeload);
                 inAppWebView.setWebViewClient(currentClient);
@@ -1114,10 +1129,30 @@ public class InAppBrowser extends CordovaPlugin {
         return File.createTempFile(imageFileName,".jpg",storageDir);
     }
 
-    // CUSTOM: File download support
+    // CUSTOM: File download support & camera grant resources onRequestPermissionsResult
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
-        if (InAppBrowser.this.downloads != null) {
+        if (InAppBrowser.this.downloads != null && permissionRequest == null) {
             InAppBrowser.this.downloads.onRequestPermissionResult(requestCode, permissions, grantResults);
+            return;
+        } 
+        
+        if (requestCode == CAMERA_REQ_CODE && permissionRequest !=null) {
+            boolean permissionsGranted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    permissionsGranted = false;
+                    break;
+                }
+            }
+
+            if (permissionsGranted) {
+                permissionRequest.grant(permissionRequest.getResources());
+                LOG.d(LOG_TAG, "Camera permissions granted");
+            } else {
+                permissionRequest.deny();
+                LOG.d(LOG_TAG, "Camera permission denied");
+            }
+            permissionRequest = null;
         }
     }
     // END CUSTOM
