@@ -488,7 +488,7 @@ var MobileApp = {
                                 var parser = new DOMParser(); \
                                 var responseHTML = parser.parseFromString(this.responseText, 'text/html'); \
                                 var loginForm = responseHTML.querySelector('form#loginForm'); \
-                                if (loginForm) { \
+                                if (loginForm && document.querySelector('form#loginForm')) { \
                                     redirectURL = '';  \
                                     document.getElementById('j_username').value = '" + username + "'; \
                                     document.getElementById('j_password').value = '" + password + "'; \
