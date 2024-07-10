@@ -459,8 +459,12 @@ var MobileApp = {
         var loginUrl = hostUri + "/jw/j_spring_security_check";    
         var credentials = "j_username=" + encodeURIComponent(username) + "&j_password=" + encodeURIComponent(password);
         var newUrl = url;
-        newUrl += (search) ? "&" : "?";
-        newUrl += "_cordova=true";
+        if (newUrl.indexOf("/web/userview/") > 0) {
+            newUrl = newUrl.replace('userview','ulogin');
+        } else {
+            newUrl += (search) ? "&" : "?";
+            newUrl += "_cordova=true";
+        }
         MobileApp.showFrame(newUrl, loginUrl, credentials);
     },
 
@@ -473,14 +477,29 @@ var MobileApp = {
         MobileApp.inAppBrowser = inAppBrowser.open(url, "_blank", "hidden=yes,location=" + showLocationBar + ",toolbar=" + showLocationBar + ",toolbarcolor=#000000,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff,closebuttoncaption=X,toolbartranslucent=no,toolbarposition=bottom,hideurlbar=yes,zoom=no");
         if (loginUrl) {
             // perform login
-            var callback = function() {
+            var callback = function () {
                 var loginScript = " \
                     try { \
                         var xhttp = new XMLHttpRequest(); \
                         xhttp.onreadystatechange = function() { \
                             if (this.readyState == 4) { \
                                 console.log('login done'); \
-                                window.location.href='" + url + "'; \
+                                var redirectURL = '" + url + "'; \
+                                var parser = new DOMParser(); \
+                                var responseHTML = parser.parseFromString(this.responseText, 'text/html'); \
+                                var loginForm = responseHTML.querySelector('form#loginForm'); \
+                                if (loginForm && document.querySelector('form#loginForm')) { \
+                                    redirectURL = '';  \
+                                    document.getElementById('j_username').value = '" + username + "'; \
+                                    document.getElementById('j_password').value = '" + password + "'; \
+                                    var loginButton = document.querySelector('body#login #loginForm table td input[type=\"submit\"]'); \
+                                    if (loginButton) { \
+                                        loginButton.click(); \
+                                    }\
+                                } \
+                                if (redirectURL) { \
+                                    window.location.href = redirectURL; \
+                                } \
                                 var data = {'action': 'show', 'message': 'true'}; \
                                 var json = JSON.stringify(data); \
                                 window.onload=function(){webkit.messageHandlers.cordova_iab.postMessage(json);}; \
@@ -503,7 +522,7 @@ var MobileApp = {
                     }
                 } else {
                     // fallback to standard JS eval function
-                        try {
+                    try {
                         MobileApp.inAppBrowser.eval(loginScript);
                         MobileApp.hideLoading();
                     } catch(e) {
