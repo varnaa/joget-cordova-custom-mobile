@@ -26,15 +26,15 @@
     filter: alpha(opacity=50);
 }
 h6.p-2.mb-5.text-light {
-    color: #ffffff !important;
+    color: #FFFFFF !important;
 }
 button {
-    background: teal !important;
+    background: #CD0404 !important;
 }
 #profile-buttons a {
-    color: teal;
+    color: #CD0404;
 }
 input.form-check-input:checked {
-    background-color: teal !important;
-    border-color: teal !important;
+    background-color: #CD0404 !important;
+    border-color: #CD0404 !important;
 }
