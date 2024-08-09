@@ -79,7 +79,7 @@ jobs:
         run: cordova plugin add cordova-plugin-android-permissions@1.1.5
 
       - name: Add cordova-plugin-custom-url-scheme
-          run: cordova plugin add cordova-plugin-customurlscheme --save --variable URL_SCHEME=pngservice
+        run: cordova plugin add cordova-plugin-customurlscheme --save --variable URL_SCHEME=pngservice
 
       - name: Build Android release APK
         run: cordova build android --release -- --keystore=android.keystore --storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --alias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} --password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --packageType=apk
