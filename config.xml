@@ -84,14 +84,12 @@
             </provider>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:name=".MainActivity" android:launchMode="singleTop" android:exported="true">
-                <intent-filter>
-                    <data android:scheme="pngwallet" />
-                    <action android:name="android.intent.action.VIEW" />
-                    <category android:name="android.intent.category.DEFAULT" />
-                    <category android:name="android.intent.category.BROWSABLE" />
-                </intent-filter>
-            </activity>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="pngwallet" />
+            </intent-filter>
         </config-file>
         <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
             <application android:requestLegacyExternalStorage="true" android:usesCleartextTraffic="true" />
