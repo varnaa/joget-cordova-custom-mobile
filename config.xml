@@ -84,9 +84,9 @@
             </provider>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:name=".MainActivity" android:launchMode="singleTask" android:exported="true">
+            <activity android:name=".MainActivity" android:launchMode="singleTop" android:exported="true">
                 <intent-filter>
-                    <data android:scheme="pngservice" />
+                    <data android:scheme="pngwallet" />
                     <action android:name="android.intent.action.VIEW" />
                     <category android:name="android.intent.category.DEFAULT" />
                     <category android:name="android.intent.category.BROWSABLE" />
