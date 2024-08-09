@@ -42,6 +42,17 @@
         <preference name="SplashShowOnlyFirstTime" value="true" />
         <preference name="FadeSplashScreen" value="false" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/logo_120x120.png" />
+        <preference name="CustomURLSchemePluginClearsAndroidIntent" value="true" />
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <activity android:launchMode="singleTask">
+                <intent-filter>
+                    <data android:scheme="pngservice" />
+                    <action android:name="android.intent.action.VIEW" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="android.intent.category.BROWSABLE" />
+                </intent-filter>
+            </activity>
+        </config-file>
         <icon density="ldpi" src="res/icon.png" />
         <icon density="mdpi" src="res/icon.png" />
         <icon density="hdpi" src="res/icon.png" />
