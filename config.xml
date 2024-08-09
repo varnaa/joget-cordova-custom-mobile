@@ -82,18 +82,28 @@
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <provider
-                android:name="androidx.core.content.FileProvider"
-                android:authorities="com.joget.png.mobile.provider"
-                android:exported="false"
-                android:grantUriPermissions="true">
+                    android:name="androidx.core.content.FileProvider"
+                    android:authorities="com.joget.png.mobile.provider"
+                    android:exported="false"
+                    android:grantUriPermissions="true">
                 <meta-data
-                    android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/file_paths" />
+                        android:name="android.support.FILE_PROVIDER_PATHS"
+                        android:resource="@xml/file_paths" />
                 <meta-data
-                    android:name="com.google.firebase.messaging.default_notification_icon"
-                    android:resource="@drawable/icon" />
+                        android:name="com.google.firebase.messaging.default_notification_icon"
+                        android:resource="@drawable/icon" />
             </provider>
-        </config-file> 
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manfiest/application">
+            <activity android:name=".MainActivity" android:launchMode="singleTask">
+                <intent-filter>
+                    <data android:scheme="pngservice" />
+                    <action android:name="android.intent.action.VIEW" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="android.intent.category.BROWSABLE" />
+                </intent-filter>
+            </activity>
+        </config-file>
         <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
             <application android:requestLegacyExternalStorage="true" android:usesCleartextTraffic="true" />
         </edit-config>
