@@ -42,7 +42,6 @@
         <preference name="SplashShowOnlyFirstTime" value="true" />
         <preference name="FadeSplashScreen" value="false" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/logo_120x120.png" />
-        <preference name="CustomURLSchemePluginClearsAndroidIntent" value="true" />
         <icon density="ldpi" src="res/icon.png" />
         <icon density="mdpi" src="res/icon.png" />
         <icon density="hdpi" src="res/icon.png" />
@@ -59,16 +58,6 @@
         <splash density="port-ldpi" src="res/splash_640x1136.png" />
         <splash density="port-mdpi" src="res/splash_640x1136.png" />
         <splash density="port-xhdpi" src="res/splash_640x1136.png" />
-        <config-file target="AndroidManifest.xml" parent="/manfiest/application">
-            <activity android:name=".MainActivity" android:launchMode="singleTask">
-                <intent-filter>
-                    <data android:scheme="pngservice" />
-                    <action android:name="android.intent.action.VIEW" />
-                    <category android:name="android.intent.category.DEFAULT" />
-                    <category android:name="android.intent.category.BROWSABLE" />
-                </intent-filter>
-            </activity>
-        </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET"/>
             <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
