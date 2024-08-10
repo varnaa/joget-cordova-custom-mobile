@@ -26,6 +26,9 @@
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
+    <feature name="Launcher">
+        <param name="android-package" value="com.hutchind.cordova.plugins.launcher.Launcher" />
+    </feature>
     <content src="index.html" />
     <icon src="res/logo_120x120.png" />
     <platform name="android">
