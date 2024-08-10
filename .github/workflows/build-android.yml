@@ -79,7 +79,7 @@ jobs:
         run: cordova plugin add cordova-plugin-android-permissions@1.1.5
 
       - name: Add cordova-plugin-deeplinking-urlscheme
-        run: cordova plugin add https://github.com/nchutchind/cordova-plugin-app-launcher.git
+        run: cordova plugin add com.lampa.startapp
 
       - name: Build Android release APK
         run: cordova build android --release -- --keystore=android.keystore --storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --alias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} --password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} --packageType=apk
