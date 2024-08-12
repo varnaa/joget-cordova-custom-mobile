@@ -75,6 +75,12 @@ jobs:
       - name: Add cordova-plugin-camera
         run: cordova plugin add cordova-plugin-camera@6.0.0
 
+      - name: Add cordova-plugin-camera
+        run: cordova plugin add cordova-plugin-intent
+
+      - name: Add cordova-plugin-camera
+        run: cordova plugin add cordova-plugin-customurlscheme
+
       - name: Add cordova-plugin-android-permissions
         run: cordova plugin add cordova-plugin-android-permissions@1.1.5
 
