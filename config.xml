@@ -6,7 +6,7 @@
     <access origin="*" />
     <allow-navigation href="*" />
     <preference name="Fullscreen" value="false" />
-    <allow-intent href="pngwallet://*/*" />
+    <allow-intent href="pngwallet://*" />
 
     <preference name="useBrowserHistory" value="true" />
     <preference name="exit-on-suspend" value="false" />
